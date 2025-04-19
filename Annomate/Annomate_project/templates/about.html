@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Virtual Canvas Project</title>
+    <style>
+        /* Global settings */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Soft gradient */
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Background bubbles */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            animation: bubbleFloat 8s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        .bubble:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            left: 5%;
+            bottom: 10%;
+            animation-duration: 9s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            left: 15%;
+            bottom: 30%;
+            animation-duration: 10s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            left: 45%;
+            bottom: 15%;
+            animation-duration: 7s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 150px;
+            height: 150px;
+            left: 65%;
+            bottom: 25%;
+            animation-duration: 11s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 50px;
+            height: 50px;
+            left: 80%;
+            bottom: 5%;
+            animation-duration: 12s;
+        }
+
+        @keyframes bubbleFloat {
+            0% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-200px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: rgba(255, 255, 255, 0.9); /* White with slight transparency */
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #455a64;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            color: white;
+            background-color: #ff6cab; /* Gradient pink */
+        }
+
+        /* Header section */
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #90caf9, #ff6cab); /* Blue to Pink Gradient */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main content container */
+        .container {
+            width: 85%;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Hover effect on container */
+        .container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Text styling */
+        h2 {
+            color: #546e7a;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #607d8b;
+        }
+
+        /* Key Points Styling */
+        .key-points {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+        }
+
+        .key-points div {
+            background: linear-gradient(to right, #ffecb3, #ffd54f);
+            color: #546e7a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            width: 30%;
+            text-align: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .key-points div:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to right, #ffd54f, #ffca28);
+        }
+
+        /* Buttons */
+        .btn-container {
+            text-align: center;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(90deg, #6c63ff, #42a5f5); /* Purple to Blue Gradient */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #42a5f5, #6c63ff); /* Reverse Gradient */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: white;
+            color: #78909c;
+            margin-top: 3rem;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .key-points {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .key-points div {
+                width: 100%;
+            }
+
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Bubbles -->
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <h2 style="color: #455a64;">AnnoMate Whiteboard</h2>
+        </div>
+        <ul>
+            <li><a href="/index/">Home</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#tutoring">Tutoring</a></li>
+            <li><a href="{% url 'chatroom' %}">Chatroom</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>Virtual Canvas Project</h1>
+    </header>
+
+    <div class="container">
+        <h2>About the Project</h2>
+        <p>
+            The <strong>Virtual Canvas Project</strong> is an innovative application that lets users draw using hand gestures. Built using OpenCV and MediaPipe, it tracks hand movements and converts them into actions like drawing, erasing, and color selection. This tool is ideal for artists, educators, and enthusiasts.
+        </p>
+
+        <div class="key-points">
+            <div>
+                <h2>Shape Drawing</h2>
+                <p>Draw various shapes like rectangles and circles with gestures. Toggle between filled or hollow shapes seamlessly.</p>
+            </div>
+            <div>
+                <h2>Color Palette</h2>
+                <p>Select different colors with hand gestures to make your artwork vibrant and expressive.</p>
+            </div>
+            <div>
+                <h2>Gesture Control</h2>
+                <p>Use simple hand gestures for actions like drawing, erasing, and even clearing the canvas.</p>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <form method="post" action="/start_drawing/">
+                {% csrf_token %}
+                <button type="submit" id="start-button" class="btn">Start Now</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 AnnoMate Whiteboard
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const csrfToken = "{{ csrf_token }}";
+          document
+            .getElementById("start-button")
+            .addEventListener("click", function () {
+              fetch("/start/", {
+                method: "POST",
+                headers: {
+                  "X-CSRFToken": csrfToken,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.status === "success") {
+                    console.log("OpenCV has started!");
+                  } else {
+                    alert("Failed to start OpenCV");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  alert("Error occurred while starting OpenCV.");
+                });
+            });
+        });
+      </script>
+</body>
+</html>

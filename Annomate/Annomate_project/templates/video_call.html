@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Call</title>
+</head>
+<body>
+    <h2>Room: {{ room_name }}</h2>
+    <video id="localVideo" autoplay playsinline></video>
+    <video id="remoteVideo" autoplay playsinline></video>
+    <button onclick="startCall()">Start Call</button>
+    <button onclick="endCall()">End Call</button>
+
+
+    <script>
+        const roomName = "{{ room_name }}";
+        const ws = new WebSocket(`ws://${window.location.host}/ws/video/${roomName}/`);
+        let localStream, peerConnection;
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+
+            if (data.offer) {
+                peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                peerConnection.createAnswer().then(answer => {
+                    peerConnection.setLocalDescription(answer);
+                    ws.send(JSON.stringify({ answer: answer }));
+                });
+            } else if (data.answer) {
+                peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+            } else if (data.candidate) {
+                peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+            }
+        };
+
+        function startCall() {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then(stream => {
+                    document.getElementById("localVideo").srcObject = stream;
+                    localStream = stream;
+                    
+                    peerConnection = new RTCPeerConnection();
+                    localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+                    peerConnection.ontrack = event => {
+                        document.getElementById("remoteVideo").srcObject = event.streams[0];
+                    };
+
+                    peerConnection.onicecandidate = event => {
+                        if (event.candidate) {
+                            ws.send(JSON.stringify({ candidate: event.candidate }));
+                        }
+                    };
+
+                    peerConnection.createOffer().then(offer => {
+                        peerConnection.setLocalDescription(offer);
+                        ws.send(JSON.stringify({ offer: offer }));
+                    });
+                })
+                .catch(error => console.error("Error accessing media devices.", error));
+        }
+
+        function endCall() {
+    if (localStream) {
+        // Stop all tracks in the local stream
+        localStream.getTracks().forEach(track => track.stop());
+        document.getElementById("localVideo").srcObject = null;
+    }
+
+    if (peerConnection) {
+        // Close the peer connection
+        peerConnection.close();
+        peerConnection = null;
+    }
+
+    // Notify the remote peer (if using WebSockets)
+    ws.send(JSON.stringify({ type: "endCall" }));
+
+    // Clear the remote video
+    document.getElementById("remoteVideo").srcObject = null;
+}
+
+    </script>
+</body>
+</html>

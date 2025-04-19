@@ -1,0 +1,320 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatroom</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            background-color: white;
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header {
+            background-color: #6c63ff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .message.user-message {
+            justify-content: flex-end;
+        }
+
+        .message-text {
+            background-color: #6c63ff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            background-color: #f4f7fc;
+        }
+
+        .send-button {
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Live Chatroom</div>
+
+        <div id="chat-messages" class="chat-messages"></div>
+
+        <div class="input-container">
+            <input id="message-input" class="message-input" type="text" placeholder="Type your message here...">
+            <button id="send-button" class="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const chatSocket = new WebSocket(protocol + window.location.host + '/ws/chat/');
+
+        // const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageContainer = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+            messageContainer.appendChild(messageElement);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.getElementById('send-button').onclick = function(e) {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInput.value = '';
+        };
+
+        document.getElementById('message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('send-button').click();
+            }
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatroom</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eef2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #6a5acd;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            border-bottom: 2px solid #4b3f9b;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9fb;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .message.user-message {
+            justify-content: flex-end;
+        }
+
+        .message-text {
+            background-color: #6a5acd;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            max-width: 70%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .message.user-message .message-text {
+            background-color: #5948cc;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #eef2f7;
+            border-top: 1px solid #ddd;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            background-color: #ffffff;
+            font-size: 16px;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .message-input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px #6a5acd;
+        }
+
+        .send-button {
+            background-color: #6a5acd;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 25px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.2);
+        }
+
+        .send-button:hover {
+            background-color: #5948cc;
+            box-shadow: 0 10px 20px rgba(106, 90, 205, 0.4);
+        }
+
+        .send-button:active {
+            transform: translateY(2px);
+        }
+
+        /* Smooth transition for message bubble */
+        .message-text {
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Live Chatroom</div>
+
+        <div id="chat-messages" class="chat-messages"></div>
+
+        <div class="input-container">
+            <input id="message-input" class="message-input" type="text" placeholder="Type your message here...">
+            <button id="send-button" class="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const chatSocket = new WebSocket(protocol + window.location.host + '/ws/chat/');
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageContainer = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<span class="message-text"><strong>${data.username}:</strong> ${data.message}</span>`;
+            messageContainer.appendChild(messageElement);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.getElementById('send-button').onclick = function(e) {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+            if(message.trim() !== '') {
+                chatSocket.send(JSON.stringify({ 'message': message }));
+                messageInput.value = '';
+            }
+        };
+
+        document.getElementById('message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('send-button').click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to AnnoMate</title>
+    <style>
+        /* Reset & global styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #F3E7E9 10%, #E3E9F5 100%);
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Navbar Styling */
+        /* nav {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+        } */
+
+        /* Hero Section */
+        .container {
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #6c63ff, #ff6cab);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 4px solid #333;
+        }
+
+        p {
+            font-size: 20px;
+            color: #555;
+            line-height: 1.7;
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #6c63ff, #ff6cab);
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 45px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+            transition: all 0.4s ease;
+            margin: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.1);
+            background: linear-gradient(90deg, #ff6cab, #6c63ff);
+        }
+
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 20px;
+            font-size: 16px;
+            color: #999;
+        }
+
+        /* Floating Bubbles */
+        .floating-bubble {
+            position: absolute;
+            background: rgba(108, 99, 255, 0.6);
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .bubble-small { width: 50px; height: 50px; }
+        .bubble-medium { width: 100px; height: 100px; }
+        .bubble-large { width: 150px; height: 150px; }
+
+        .bubble-1 { top: 10%; left: 15%; animation-duration: 8s; }
+        .bubble-2 { top: 50%; left: 70%; animation-duration: 12s; }
+        .bubble-3 { top: 30%; left: 90%; animation-duration: 10s; }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #333; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 48px; }
+            p { font-size: 18px; }
+            .btn { font-size: 18px; padding: 12px 40px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 38px; }
+            p { font-size: 16px; }
+            .btn { font-size: 16px; padding: 10px 30px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- <nav>
+        <a href="#">Home</a>
+        <a href="#">Contact</a>
+    </nav> -->
+
+    <div class="container">
+        <h1>Welcome to AnnoMate</h1>
+        <p>Empower your experience with a simple yet powerful interactive platform.</p>
+
+        <form method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <button class="btn" type="submit" id="signup-button">Sign Up</button>
+        </form>
+        
+        <form method="post" action="{% url 'login_page' %}">
+            {% csrf_token %}
+            <button class="btn" type="submit" id="login-button">Login</button>
+        </form>
+        
+
+        <!-- <button class="btn" type="submit" id="signup-button">Sign Up</button>
+        <button class="btn" type="submit" id="login-button">Login</button> -->
+        <!-- <form method="post" action="/login_page/">
+            {% csrf_token %}
+        </form> -->
+    </div>
+
+    <footer>&copy; 2024 AnnoMate. All rights reserved.</footer>
+
+    <div class="background">
+        <div class="floating-bubble bubble-small bubble-1"></div>
+        <div class="floating-bubble bubble-medium bubble-2"></div>
+        <div class="floating-bubble bubble-large bubble-3"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupButton = document.getElementById('signup-button');
+            const loginButton = document.getElementById('login-button');
+    
+            signupButton.addEventListener('click', function() {
+                window.location.href = "{% url 'signup' %}";
+            });
+    
+            loginButton.addEventListener('click', function() {
+                window.location.href = "{% url 'login_page' %}";
+            });
+        });
+    </script>
+    
+</body>
+</html>

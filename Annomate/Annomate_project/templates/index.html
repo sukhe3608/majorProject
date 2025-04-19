@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Web Whiteboard</title>
+    <style>
+      /* Reset & global styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f3e7e9 10%, #e3e9f5 100%);
+        color: #333;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Navbar Styling */
+      nav {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 15px 40px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      nav a {
+        color: #333;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      nav a::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        height: 2px;
+        width: 0;
+        background: #6c63ff;
+        transition: width 0.4s ease, left 0.4s ease;
+      }
+
+      nav a:hover::after {
+        width: 100%;
+        left: 0;
+      }
+
+      nav a:hover {
+        color: #6c63ff;
+      }
+
+      /* Hero Section */
+      .container {
+        margin-top: 100px;
+        text-align: center;
+        animation: fadeIn 1.5s ease;
+      }
+
+      h1 {
+        font-size: 64px;
+        font-weight: 800;
+        background: linear-gradient(45deg, #6c63ff, #ff6cab);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        margin-bottom: 20px;
+        animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 4px solid #333;
+      }
+
+      p {
+        font-size: 20px;
+        color: #555;
+        line-height: 1.7;
+        max-width: 700px;
+        margin: 20px auto;
+      }
+
+      .btn {
+        background: linear-gradient(90deg, #6c63ff, #ff6cab);
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 15px 45px;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 300%;
+        height: 300%;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transition: width 0.5s ease, height 0.5s ease, top 0.5s ease,
+          left 0.5s ease;
+        z-index: 0;
+        opacity: 0;
+      }
+
+      .btn:hover::after {
+        width: 0;
+        height: 0;
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+      }
+
+      .btn:hover {
+        transform: translateY(-4px) scale(1.1);
+        background: linear-gradient(90deg, #ff6cab, #6c63ff);
+        animation: pulse 1s infinite;
+      }
+      
+      #start-video-chat{
+        background: linear-gradient(90deg, #6c63ff, #ff6cab);
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 15px 45px;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+      }
+
+      #start-video-chat::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 300%;
+        height: 300%;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transition: width 0.5s ease, height 0.5s ease, top 0.5s ease,
+          left 0.5s ease;
+        z-index: 0;
+        opacity: 0;
+      }
+
+      #start-video-chat:hover {
+        background: linear-gradient(90deg, #ff6cab, #6c63ff);
+        animation: pulse 1s infinite;
+        transform: scale(1.1);
+      }
+
+      #start-video-chat:hover::after {
+        width: 0;
+        height: 0;
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+      }
+
+      #start-video-chat:focus {
+        outline: none;
+      }
+
+      .btn:focus {
+        outline: none;
+      }
+
+      /* Footer */
+      footer {
+        position: fixed;
+        bottom: 20px;
+        font-size: 16px;
+        color: #999;
+      }
+
+      /* Floating Bubbles */
+      .floating-bubble {
+        position: absolute;
+        background: rgba(108, 99, 255, 0.6);
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: float 10s infinite ease-in-out;
+      }
+
+      .bubble-small {
+        width: 50px;
+        height: 50px;
+      }
+      .bubble-medium {
+        width: 100px;
+        height: 100px;
+      }
+      .bubble-large {
+        width: 150px;
+        height: 150px;
+      }
+
+      .bubble-1 {
+        top: 10%;
+        left: 15%;
+        animation-duration: 8s;
+      }
+      .bubble-2 {
+        top: 50%;
+        left: 70%;
+        animation-duration: 12s;
+      }
+      .bubble-3 {
+        top: 30%;
+        left: 90%;
+        animation-duration: 10s;
+      }
+
+      /* Keyframe Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: #333;
+        }
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-30px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 48px;
+        }
+
+        p {
+          font-size: 18px;
+        }
+
+        .btn {
+          font-size: 18px;
+          padding: 12px 40px;
+        }
+
+        nav a {
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 38px;
+        }
+
+        p {
+          font-size: 16px;
+        }
+
+        .btn {
+          font-size: 16px;
+          padding: 10px 30px;
+        }
+
+        nav a {
+          font-size: 14px;
+        }
+
+        nav {
+          flex-wrap: wrap;
+          padding: 10px;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Education</a>
+      <a href="#">Tutoring</a>
+      <a href="{% url 'chatroom' %}">Chatroom</a>
+      <a href="/about/">About</a>
+      <a href="/Annomate/video_chat/templates/video_call.html">Start Video Call</a>
+      <!-- <a href="{% url 'video_chat_room' room_name='test_room' %}">Start Video Call</a> -->
+      
+    </nav>
+
+    <div class="container">
+      <h1>Welcome to AnnoMate</h1>
+      <p>
+        Empower your teaching and learning experiences with an intuitive,
+        interactive web whiteboard. Perfect for classrooms, business meetings,
+        or personal use.
+      </p>
+      <form method="post" action="/start_drawing/">
+        {% csrf_token %}
+        <button type="submit" id="start-button" class="btn">Start Now</button>
+        <a id="start-video-chat" href="{% url 'video_chat_room' room_name='test_room' %}" class="btn btn-primary">Start Video Call</a>
+      </form>
+
+      <!-- <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> -->
+    </div>
+
+    <footer>
+      &copy; 2024 Interactive Web Whiteboard. All rights reserved.
+    </footer>
+
+    <div class="background">
+      <!-- Floating bubbles -->
+      <div class="floating-bubble bubble-small bubble-1"></div>
+      <div class="floating-bubble bubble-medium bubble-2"></div>
+      <div class="floating-bubble bubble-large bubble-3"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const csrfToken = "{{ csrf_token }}";
+        document
+          .getElementById("start-button")
+          .addEventListener("click", function () {
+            fetch("/start_drawing/", {
+              method: "POST",
+              headers: {
+                "X-CSRFToken": csrfToken,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({}),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.status === "success") {
+                  console.log("OpenCV has started!");
+                } else {
+                  // alert("Failed to start OpenCV");
+                  alert("OpenCV has started!");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Error occurred while starting OpenCV.");
+              });
+          });
+      });
+    </script>
+  </body>
+</html>
